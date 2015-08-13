@@ -49,15 +49,15 @@ var DDPServer = function(opts) {
               var result = methods[data.method].apply(this, data.params)
 
               sendMessage({
+                msg: "updated",
+                methods: [data.id]
+              })
+
+              sendMessage({
                 msg: "result",
                 id: data.id,
                 result: result
               });
-
-              sendMessage({
-                msg: "updated",
-                id: data.id
-              })
 
             } catch (e) {
               console.log("error calling method", data.method, e)
