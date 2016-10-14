@@ -157,14 +157,14 @@ var DDPServer = function(opts) {
 
   this.publish = function(name) {
     if (name in collections)
-      throw new Error(500, "A collection named " + key + " already exists");
+      throw new Error(500, "A collection named " + name + " already exists");
 
     var documents = {};
     var proxiedDocuments = {};
 
     function add(id, doc) {
       documents[id] = doc;
-      proxiedDocuments[id] = Proxy(doc, {
+      proxiedDocuments[id] = new Proxy(doc, {
         set: function(_, field, value) {
           var changed = {};
           doc[field] = changed[field] = value;
@@ -208,7 +208,7 @@ var DDPServer = function(opts) {
           subscriptions[client][name].removed(id);
     }
 
-    return collections[name] = Proxy(documents, {
+    return collections[name] = new Proxy(documents, {
       get: function(_, id) {
         return proxiedDocuments[id];
       },
